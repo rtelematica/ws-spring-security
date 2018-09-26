@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sec="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 
+		Defaults:
+		
+		use-expressions = true
+		disable-url-rewriting = true
+		
+		Login form:
+		GET /login
+		
+		Logout:
+		POST /logout
+		
+		Login form action: (login processing URL)
+		POST /login
+		
+		username => username
+		password => password
+		
+		Login Authentication Failure URL /login?login_error=1
+		
+	 -->
+	<sec:http auto-config="true" use-expressions="true"  >
+	
+		<sec:form-login login-page="/form-login.jsp"
+			username-parameter="u"
+			password-parameter="p"
+			login-processing-url="/do-login" 
+			authentication-failure-url="/login-error.jsp" />
+			
+		<sec:intercept-url pattern="/form-login*" access="permitAll"/>
+		<sec:intercept-url pattern="/login-error*" access="permitAll"/>
+		
+		<sec:intercept-url pattern="/**" access="hasRole('ROLE_Usuario')" /> <!-- access="ROLE_Usuario" -->
+		
+		<sec:csrf disabled="true"/>
+		
+	</sec:http>
+
+
+	<sec:authentication-manager>
+		<sec:authentication-provider>
+			<sec:user-service>
+				<sec:user name="ivan" password="123123" authorities="ROLE_Usuario" />
+			</sec:user-service>
+		</sec:authentication-provider>
+	</sec:authentication-manager>
+
+</beans>
